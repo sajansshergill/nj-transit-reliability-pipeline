@@ -1,0 +1,9 @@
+trip_id,route_id,route_short_name,direction_id,stop_id,stop_name,stop_sequence,actual_arrival_epoch,delay_seconds,on_time_flag,service_date,arrival_hour_ts,weather_station,temperature_c,precipitation_mm,wind_speed_kmh,weather_code
+NEC_101,NEC,Northeast Corridor,0,NP,Newark Penn,3,1754130600,120,1,2026-08-02,2026-08-02T14:00,Newark Penn,27.5,0.0,11.0,1
+NEC_101,NEC,Northeast Corridor,0,NB,New Brunswick,7,1754132400,540,0,2026-08-02,2026-08-02T14:00,New Brunswick,28.1,3.2,14.0,61
+NEC_103,NEC,Northeast Corridor,0,NP,Newark Penn,3,1754134200,60,1,2026-08-02,2026-08-02T15:00,Newark Penn,29.0,0.0,9.0,0
+NJCL_204,NJCL,North Jersey Coast,1,HB,Hoboken,1,1754136000,-30,1,2026-08-02,2026-08-02T15:00,Hoboken,26.4,0.0,18.0,2
+NJCL_204,NJCL,North Jersey Coast,1,SC,Secaucus Jct,4,1754137800,720,0,2026-08-02,2026-08-02T16:00,Secaucus Jct,26.9,5.1,22.0,63
+MOBO_310,MOBO,Montclair-Boonton,0,SU,Summit,5,1754139600,300,1,2026-08-02,2026-08-02T16:00,Summit,25.8,0.2,12.0,51
+MOBO_310,MOBO,Montclair-Boonton,0,NP,Newark Penn,9,1754141400,900,0,2026-08-02,2026-08-02T17:00,Newark Penn,25.1,4.8,20.0,63
+NEC_105,NEC,Northeast Corridor,0,TR,Trenton,12,1754143200,45,1,2026-08-02,2026-08-02T17:00,Trenton,27.2,0.0,8.0,1

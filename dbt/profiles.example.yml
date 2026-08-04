@@ -1,0 +1,19 @@
+# Copy to ~/.dbt/profiles.yml (or set DBT_PROFILES_DIR).
+# Local/CI dev runs on DuckDB with a seeded sample; prod runs on Snowflake.
+njt_reliability:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: "target/njt_dev.duckdb"
+      schema: main
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'NJT_RELIABILITY') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      schema: ANALYTICS
+      threads: 4

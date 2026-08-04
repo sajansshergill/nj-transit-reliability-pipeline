@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Silver stop-performance data loaded from the lake."
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'NJT_RELIABILITY') }}"
+    schema: RAW
+    tables:
+      - name: stop_performance
+        description: "One row per trip-stop with delay, on-time flag, and weather."

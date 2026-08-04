@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+.pyuser/
+.venv/
+venv/
+target/
+dbt_packages/
+logs/
+*.duckdb
+.great_expectations/uncommitted/
+.DS_Store
+dbt/.user.yml
+dbt/profiles.yml

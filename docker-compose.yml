@@ -1,0 +1,42 @@
+# Local dev stack: Airflow (standalone) + MinIO (S3-compatible lake).
+# Spark runs in local mode inside the Airflow container via spark-submit.
+services:
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  airflow:
+    image: apache/airflow:2.9.3-python3.11
+    depends_on: [minio]
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      PYTHONPATH: /opt/project
+      S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      S3_BUCKET: njt-reliability-dev
+      DBT_TARGET: duckdb
+    volumes:
+      - ./:/opt/project
+      - ./dags:/opt/airflow/dags
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "pip install -r /opt/project/requirements.txt &&
+               airflow db migrate &&
+               (airflow users create --username admin --password admin
+               --firstname a --lastname b --role Admin --email a@b.c || true) &&
+               airflow standalone"
+
+volumes:
+  minio_data:

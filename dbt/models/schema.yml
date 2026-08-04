@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_stop_performance
+    columns:
+      - name: trip_id
+        tests: [not_null]
+      - name: stop_id
+        tests: [not_null]
+      - name: on_time_flag
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+
+  - name: fct_stop_performance
+    columns:
+      - name: weather_condition
+        tests:
+          - accepted_values:
+              values: ["clear", "light_precip", "rain", "high_wind"]
+
+  - name: mart_ontime_by_line
+    columns:
+      - name: line_name
+        tests: [not_null]
+
+  - name: mart_ontime_by_weather
+    columns:
+      - name: line_name
+        tests: [not_null] 
