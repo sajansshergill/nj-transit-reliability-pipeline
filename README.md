@@ -4,6 +4,38 @@ An end-to-end data pipeline that measures how reliably NJ Transit trains run —
 
 The thing that makes this repo different from most data-pipeline portfolios: **every hop is validated.** Bad data gets quarantined, not silently loaded. That data-quality layer is treated as a first-class part of the pipeline, not an afterthought.
 
+![NJ Transit Reliability demo](docs/demo.gif)
+
+## The console
+
+The pipeline's serving layer is an interactive reliability console
+(`app/dashboard.py`, Streamlit + Plotly) that runs over the gold marts —
+schedule vs. actual, by line, hour and weather:
+
+- **Live sidebar filters** — service-date range, lines, weather conditions,
+  weather stations, hour-of-day window, direction and a late-trains-only
+  toggle; every chart, table and KPI re-renders instantly.
+- **KPI cards with deltas** — filtered on-time % vs. the prior equal-length
+  period, average delay, stop observations, the worst line right now, and
+  the quarantined share of rows held back by the quality gates.
+- **Animated charts** — Plotly `animation_frame` views: daily on-time % by
+  line and a cumulative delay race you can play, day by day.
+- **3D delay space** — a rotatable `Scatter3d` of every stop observation in
+  hour × temperature × delay space, and a line × hour **on-time surface**
+  terrain (drag to orbit, scroll to zoom).
+- **The pipeline's own rules, on screen** — on-time means delay ≤ 300s
+  (`ON_TIME_THRESHOLD_SECONDS`), weather buckets follow
+  `fct_stop_performance` exactly (rain / light precip / high wind / clear),
+  and the quarantine tab shows the Great Expectations ledger per medallion
+  layer, with storm-day spikes.
+- **Dark UI** — gradient hero header, glass KPI cards and a custom dark
+  theme (`.streamlit/config.toml` + inline CSS).
+
+The console runs standalone from the repo — demo data is generated
+deterministically from the pipeline's own schemas (silver stop-performance
+grain, the two gold marts), so it needs no S3, Snowflake or live feed:
+`streamlit run app/dashboard.py`.
+
 ---
 
 ## Why this project exists
@@ -64,6 +96,7 @@ Data moves through a standard medallion layout — **bronze** (raw, immutable), 
 | Warehouse | Snowflake *(or BigQuery — see notes)* |
 | Data quality | Great Expectations |
 | Testing | pytest, dbt tests |
+| Serving | Streamlit + Plotly (reliability console) |
 | CI | GitHub Actions |
 | Env / runtime | Linux, Docker, Git |
 
@@ -126,6 +159,8 @@ nj-transit-reliability-pipeline/
 │   └── dbt_project.yml
 ├── quality/
 │   └── expectations/                   # Great Expectations suites per layer
+├── app/
+│   └── dashboard.py                    # Streamlit + Plotly reliability console
 ├── tests/
 │   └── ...                             # pytest unit tests for ingestion + transforms
 ├── .github/workflows/
@@ -176,7 +211,10 @@ group by 1, 2
 order by on_time_pct asc;
 ```
 
-This is the natural place to bolt on a small Streamlit or notebook dashboard if you want a visual, but the query alone tells the story: which lines degrade most when it rains.
+The reliability console (see *The console* above) renders exactly this cut
+live — on-time % by line and weather condition, with the delay distribution
+behind it — and the query alone tells the story: which lines degrade most
+when it rains.
 
 ---
 
